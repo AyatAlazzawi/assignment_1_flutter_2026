@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 //This app was built by Ayat Al-Azzawi for Mobile Web App course in Winter 2026
 //Please not that I am also using this assinment to understand how flutter works so it may have some extra comments
 
+/*Ayat Flutter Info
+-In flutter screens and components = classes*/
+
 void main() {
   runApp(const MyApp());
 }
+
+//var intValue = Random().nextInt(10); //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
 
 //Root widget of the app
 //Root widget = app wide setup = themedata, material app, App title, initial page/ home page, and any routes
@@ -24,8 +29,19 @@ main()
               └── Scaffold
                    ├── AppBar
                    └── Body
+  
+
+  //themedata map
+  ThemeData
+├── AppBar colors
+├── Page (Scaffold) background color
+├── Button colors
+├── Text colors
+└── Overall color scheme
+
  */
 class MyApp extends StatelessWidget {
+  //create a new class MyApp which will not have a changing state since this is a root app widget which only sets up global things like themes
   const MyApp({super.key});
 
   @override
@@ -34,8 +50,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Random Number Generator',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          centerTitle: false,
+          backgroundColor: Color(0xFF147CD3),
+        ),
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        primarySwatch: Colors.blue, //sets the color for the whole app
+        //primarySwatch: Colors.blue, //sets the color for the whole app
         //useMaterial3: true,
       ),
 
@@ -43,7 +63,7 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
 
       // Optional: named route for the second page
-      routes: {'/second': (context) => const SecondPage()},
+      //routes: {'/second': (context) => const StatisticsPage()},
     );
   }
 }
@@ -52,78 +72,57 @@ class MyApp extends StatelessWidget {
 //basically every page is another widget
 //keep in mind flutter doesn't automatically switch pages so we need to use Navigator.push(......) to go next, and pop to go back
 // -------------------- PAGE 1 --------------------
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  //int result = 0;
+  var result = Random().nextInt(
+    10,
+  ); //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
+  bool displayRandomNumber = false;
+
+  /*@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Random number Generator')),
+      body: Center(
+        child: Text('Result: $result', style: const TextStyle(fontSize: 32)),
+      ),
+    );
+  }
+}*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Random Number Generator'),
-        centerTitle: true,
+        centerTitle: false,
       ),
+
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'This is Page 1',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Tap the button to go to Page 2.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // navigate to the second page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecondPage()),
-                );
-                // OR using the named route:
-                // Navigator.pushNamed(context, '/second');
+                setState(() {
+                  //answer = 5 + 3;
+                  displayRandomNumber = true;
+                });
               },
-              child: const Text('Go to Page 2'),
+              child: const Text('Generate'),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-// -------------------- PAGE 2 --------------------
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
+            const SizedBox(height: 20),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Second Page'), centerTitle: true),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'This is Page 2',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'You navigated here from Page 1.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                // go back to the previous page
-                Navigator.pop(context);
-              },
-              child: const Text('Back to Page 1'),
-            ),
+            if (displayRandomNumber)
+              Text('Answer: $result', style: const TextStyle(fontSize: 28)),
           ],
         ),
       ),

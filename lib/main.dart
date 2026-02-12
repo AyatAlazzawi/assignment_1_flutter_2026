@@ -53,10 +53,16 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           centerTitle: false,
           backgroundColor: Color(0xFF147CD3),
+          foregroundColor: Colors.white, //title and icon color
         ),
-        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        //primarySwatch: Colors.blue, //sets the color for the whole app
-        //useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFF2196F3),
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1A237E),
+            foregroundColor: Colors.white,
+          ),
+        ),
       ),
 
       // First page that shows when the app starts
@@ -81,22 +87,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //int result = 0;
   var result = Random().nextInt(
     10,
   ); //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
   bool displayRandomNumber = false;
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Random number Generator')),
-      body: Center(
-        child: Text('Result: $result', style: const TextStyle(fontSize: 32)),
-      ),
-    );
-  }
-}*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(

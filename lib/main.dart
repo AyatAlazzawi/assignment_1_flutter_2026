@@ -99,6 +99,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+        ),
         title: const Text('Random Number Generator'),
         centerTitle: false,
       ),
@@ -107,6 +113,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text('$result', style: const TextStyle(fontSize: 28)),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -138,7 +145,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             //if (displayRandomNumber)
-            Text('Answer: $result', style: const TextStyle(fontSize: 28)),
+            //Text('Answer: $result', style: const TextStyle(fontSize: 28)),
           ],
         ),
       ),

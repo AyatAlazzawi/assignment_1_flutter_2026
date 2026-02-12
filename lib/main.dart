@@ -87,10 +87,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var result = Random().nextInt(
-    10,
-  ); //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
+  //var result = Random().nextInt(10,); //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
+  //final Map<int, int> counts = {};
+  //bool displayRandomNumber = false;
+  final Random random = Random();
+  int result = 0;
   bool displayRandomNumber = false;
+  final Map<int, int> counts = {};
 
   @override
   Widget build(BuildContext context) {
@@ -107,19 +110,80 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  //answer = 5 + 3;
+                  result = random.nextInt(10);
                   displayRandomNumber = true;
+
+                  if (counts.containsKey(result)) {
+                    counts[result] = counts[result]! + 1;
+                  } else {
+                    counts[result] = 1;
+                  }
                 });
               },
+
               child: const Text('Generate'),
             ),
 
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StatisticsPage(counts: counts),
+                  ),
+                );
+              },
+              child: const Text('View Statistics'),
+            ),
 
-            if (displayRandomNumber)
-              Text('Answer: $result', style: const TextStyle(fontSize: 28)),
+            //if (displayRandomNumber)
+            Text('Answer: $result', style: const TextStyle(fontSize: 28)),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// -------------------- PAGE 2 --------------------
+//this requires mapping /i need a var for result which i have but need to store how many times it appears and then a map?
+//is result a local var for the previous page or is it global?
+
+class StatisticsPage extends StatelessWidget {
+  final Map<int, int> counts;
+  const StatisticsPage({super.key, required this.counts});
+  //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
+  //bool displayRandomNumber = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Random Number Generator'),
+        centerTitle: false,
+      ),
+
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: counts.entries.map((entry) {
+                return ListTile(
+                  title: Text('Number: ${entry.key}'),
+                  subtitle: Text('Count: ${entry.value}'),
+                );
+              }).toList(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Go Back'),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

@@ -59,9 +59,23 @@ class MyApp extends StatelessWidget {
 
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            backgroundColor: const Color(0xFF2196F3),
             foregroundColor: Colors.white,
+            minimumSize: const Size(
+              double.infinity,
+              48,
+            ), //make buttons full size
           ),
+        ),
+        textTheme: const TextTheme(
+          //using const so that it can be created on compile time since both textTheme and the const are immutable
+          headlineLarge: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
         ),
       ),
 
@@ -110,43 +124,48 @@ class _HomePageState extends State<HomePage> {
       ),
 
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('$result', style: const TextStyle(fontSize: 28)),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  result = random.nextInt(10);
-                  displayRandomNumber = true;
+        child: SizedBox(
+          width: 260,
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.end, //what does this do again?
+            children: [
+              const Spacer(), //the difference between spacer and padding is that padding adds space around a widget but spacerpushes the widgets in a row or column apart, spacer is also flexible and only works in rows, columns, or flex
+              Text('$result', style: Theme.of(context).textTheme.headlineLarge),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    result = random.nextInt(10);
+                    displayRandomNumber = true;
 
-                  if (counts.containsKey(result)) {
-                    counts[result] = counts[result]! + 1;
-                  } else {
-                    counts[result] = 1;
-                  }
-                });
-              },
+                    if (counts.containsKey(result)) {
+                      counts[result] = counts[result]! + 1;
+                    } else {
+                      counts[result] = 1;
+                    }
+                  });
+                },
 
-              child: const Text('Generate'),
-            ),
+                child: const Text('Generate'),
+              ),
 
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StatisticsPage(counts: counts),
-                  ),
-                );
-              },
-              child: const Text('View Statistics'),
-            ),
-
-            //if (displayRandomNumber)
-            //Text('Answer: $result', style: const TextStyle(fontSize: 28)),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StatisticsPage(counts: counts),
+                    ),
+                  );
+                },
+                child: const Text('View Statistics'),
+              ),
+              const SizedBox(height: 40),
+              //if (displayRandomNumber)
+              //Text('Answer: $result', style: const TextStyle(fontSize: 28)),
+            ],
+          ),
         ),
       ),
     );
@@ -189,9 +208,22 @@ class StatisticsPage extends StatelessWidget {
             },
             child: const Text('Go Back'),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
         ],
       ),
     );
   }
 }
+
+
+
+//Ayat come back and see if youre supposed to do this for the list styling text o if it has its own styling?
+/* 
+
+am i supposed to vhange it to this like the other text?
+Text('Answer: $result')
+Text(
+  'Answer: $result',
+  style: Theme.of(context).textTheme.headlineLarge,
+),
+*/

@@ -29,7 +29,7 @@ main()
               └── Scaffold
                    ├── AppBar
                    └── Body
-  
+
 
   //themedata map
   ThemeData
@@ -127,10 +127,13 @@ class _HomePageState extends State<HomePage> {
         child: SizedBox(
           width: 260,
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.end, //what does this do again?
             children: [
               const Spacer(), //the difference between spacer and padding is that padding adds space around a widget but spacerpushes the widgets in a row or column apart, spacer is also flexible and only works in rows, columns, or flex
-              Text('$result', style: Theme.of(context).textTheme.headlineLarge),
+              if (displayRandomNumber)
+                Text(
+                  '$result',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
               const Spacer(),
               ElevatedButton(
                 onPressed: () {
@@ -155,13 +158,22 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => StatisticsPage(counts: counts),
+                      builder: (context) => StatisticsPage(
+                        counts: counts,
+                        onReset: () {
+                          setState(() {
+                            counts.clear();
+                            displayRandomNumber = false;
+                            result = 0;
+                          });
+                        },
+                      ),
                     ),
                   );
                 },
                 child: const Text('View Statistics'),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               //if (displayRandomNumber)
               //Text('Answer: $result', style: const TextStyle(fontSize: 28)),
             ],
@@ -173,12 +185,15 @@ class _HomePageState extends State<HomePage> {
 }
 
 // -------------------- PAGE 2 --------------------
-//this requires mapping /i need a var for result which i have but need to store how many times it appears and then a map?
-//is result a local var for the previous page or is it global?
 
 class StatisticsPage extends StatelessWidget {
   final Map<int, int> counts;
-  const StatisticsPage({super.key, required this.counts});
+  final VoidCallback onReset; //VoidCallBack is
+  const StatisticsPage({
+    super.key,
+    required this.counts,
+    required this.onReset,
+  });
   //this variable has an integer vaue greater or equal to one but less than 10, dart math also allows you to do this fir doubles or bools
   //bool displayRandomNumber = false;
 
@@ -194,19 +209,43 @@ class StatisticsPage extends StatelessWidget {
         children: [
           Expanded(
             child: ListView(
-              children: counts.entries.map((entry) {
+              children: List.generate(10, (index) {
+                final count = counts[index] ?? 0;
+
+                return ListTile(
+                  title: Text(
+                    'Number $index',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  trailing: Text(
+                    '$count times',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              }),
+            ),
+          ),
+
+          /*children: counts.entries.map((entry) {
                 return ListTile(
                   title: Text('Number: ${entry.key}'),
                   subtitle: Text('Count: ${entry.value}'),
                 );
-              }).toList(),
-            ),
-          ),
+              }).toList(),*/
+          //this becomes useless because I didnt realize that my list needs to be ordered and just count occurances
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
             },
             child: const Text('Go Back'),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              onReset();
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            child: const Text('Reset'),
           ),
           const SizedBox(height: 40),
         ],
@@ -214,16 +253,3 @@ class StatisticsPage extends StatelessWidget {
     );
   }
 }
-
-
-
-//Ayat come back and see if youre supposed to do this for the list styling text o if it has its own styling?
-/* 
-
-am i supposed to vhange it to this like the other text?
-Text('Answer: $result')
-Text(
-  'Answer: $result',
-  style: Theme.of(context).textTheme.headlineLarge,
-),
-*/
